@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensors</title>
+    <script src="https://cdn.canvasjs.com/ga/canvasjs.min.js"></script>
+</head>
+
+<body>
+    <h3>Chart 1</h3>
+    <div id="pmChart" style="width: 100%; height: 360px;"></div>
+    <h3>Chart 2</h3>
+    <div id="coChart" style="width: 100%; height: 360px;"></div>
+    <h3>Chart 3</h3>
+    <div id="tvocChart" style="width: 100%; height: 360px;"></div>
+    <h3>Chart 4</h3>
+    <div id="co2Chart" style="width: 100%; height: 360px;"></div>
+</body>
+
+</html>
+
+<script>
+    window.onload = function () {
+        const data = JSON.parse(`{{ data_points | safe }}`)
+        const tooltip = {
+            shared: true,
+        }
+        const legend = {
+            cursor: "pointer",
+            itemclick: function (e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                e.chart.render();
+            }
+        };
+        const map = (row, valueName) => {
+            return { x: new Date(row['timestamp']).getTime(), y: Number.parseFloat(row[valueName]) }
+        }
+        const pm25Data = [];
+        const pm10Data = [];
+        const coData = [];
+
+        const tvocData = [];
+        const eco2Data = [];
+
+        const co2Data = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const row = data[i]
+            pm25Data.push(map(row, 'pm25'))
+            pm10Data.push(map(row, 'pm10'))
+        }
+        console.log(pm25Data)
+        const pmChartOptions = {
+            data: [{
+                type: "splineArea",
+                showInLegend: "true",
+                name: "PM25",
+                color: "#e57373",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MMM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: pm25Data,
+            }, {
+                type: "splineArea",
+                showInLegend: "true",
+                name: "PM10",
+                color: "#f44336",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MMM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: pm10Data
+            }]
+        }
+        const pmChart = new CanvasJS.Chart('pmChart', pmChartOptions)
+        pmChart.render()
+        // const coChart = new CanvaJs.Chart('coChart')
+        // const tvocChart = new CanvaJs.Chart('tvocChart')
+        // const co2Chart = new CanvaJs.Chart('coChart')
+    }
+
+</script>
