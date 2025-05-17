@@ -21,8 +21,8 @@ class Command(BaseCommand):
         eco2=random.uniform(1, 10)
         co2=random.uniform(10, 50)
 
-        for _ in range(100):
-            device_id = f'Device #{random.randint(1, 10)}'
+        for _ in range(1000):
+            device_id = f'Device #{random.randint(1, 9)}'
             timestamp = timestamp + timedelta(minutes=random.randint(1, 59), seconds=random.randint(1, 59))
             pm25 = bounds(pm25 + random.uniform(-1, 1), 12, 150)
             pm10 = bounds(pm10 + random.uniform(-1, 1), 12, 150)

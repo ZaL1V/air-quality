@@ -29,7 +29,18 @@ def serialize_obj(data: SensorData) -> dict:
 
 
 def charts(request: HttpRequest):
+    device_id = request.GET.get('device', 'All')
     data = SensorData.objects.order_by('timestamp')
-    data_points = [serialize_obj(o) for o in data]
-    context = {'data_points': json.dumps(data_points)}
+    data_points = []
+    devices = []
+    for o in data:
+        if o.device_id not in devices:
+            devices.append(o.device_id)
+
+        if device_id != 'All' and device_id != o.device_id:
+            continue
+        data_points.append(serialize_obj(o))
+
+    context = {'data_points': json.dumps(data_points), 'devices': sorted(devices),'selected': device_id}
+
     return render(request, 'sensors/charts.html', context=context)
