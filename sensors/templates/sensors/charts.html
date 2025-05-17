@@ -9,14 +9,18 @@
 </head>
 
 <body>
-    <h3>Chart 1</h3>
-    <div id="pmChart" style="width: 100%; height: 360px;"></div>
-    <h3>Chart 2</h3>
-    <div id="coChart" style="width: 100%; height: 360px;"></div>
-    <h3>Chart 3</h3>
-    <div id="tvocChart" style="width: 100%; height: 360px;"></div>
-    <h3>Chart 4</h3>
-    <div id="co2Chart" style="width: 100%; height: 360px;"></div>
+    <h1 style="text-align: center;">Sensors Dashboard</h1>
+    <div style="display: flex; justify-content: space-around;">
+        <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width:80%">
+            <div id="pmChart" style="width: 100%; height: 360px;"></div>
+            <div id="coChart" style="width: 100%; height: 360px;"></div>
+            <div id="tvocChart" style="width: 100%; height: 360px;"></div>
+            <div id="co2Chart" style="width: 100%; height: 360px;"></div>
+        </div>
+
+    </div>
+    </div>
 </body>
 
 </html>
@@ -54,16 +58,20 @@
             const row = data[i]
             pm25Data.push(map(row, 'pm25'))
             pm10Data.push(map(row, 'pm10'))
+            coData.push(map(row, 'co'))
+            tvocData.push(map(row, 'tvoc'))
+            eco2Data.push(map(row, 'eco2'))
+            co2Data.push(map(row, 'co2'))
         }
-        console.log(pm25Data)
         const pmChartOptions = {
+            title: { text: 'PM10 and PM25' },
             data: [{
                 type: "splineArea",
                 showInLegend: "true",
                 name: "PM25",
                 color: "#e57373",
                 xValueType: "dateTime",
-                xValueFormatString: "DD MMM YY HH:mm",
+                xValueFormatString: "DD MM YY HH:mm",
                 yValueFormatString: "##.##",
                 legendMarkerType: "square",
                 dataPoints: pm25Data,
@@ -73,17 +81,76 @@
                 name: "PM10",
                 color: "#f44336",
                 xValueType: "dateTime",
-                xValueFormatString: "DD MMM YY HH:mm",
+                xValueFormatString: "DD MM YY HH:mm",
                 yValueFormatString: "##.##",
                 legendMarkerType: "square",
                 dataPoints: pm10Data
             }]
         }
+
+        const coChartOptions = {
+            title: { text: 'CO' },
+            data: [{
+                type: "splineArea",
+                showInLegend: "true",
+                name: "CO",
+                color: "#ffb74d",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: coData,
+            }]
+        }
+
+        const tvocChartOptions = {
+            title: { text: 'TVOC and ECO2' },
+            data: [{
+                type: "splineArea",
+                showInLegend: "true",
+                name: "TVOC",
+                color: "#64b5f6",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: tvocData,
+            }, {
+                type: "splineArea",
+                showInLegend: "true",
+                name: "ECO2",
+                color: "#2196f3",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: eco2Data,
+            }]
+        }
+        const co2ChartOptions = {
+            title: { text: 'CO2' },
+            data: [{
+                type: "splineArea",
+                showInLegend: "true",
+                name: "CO2",
+                color: "#81c784",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MM YY HH:mm",
+                yValueFormatString: "##.##",
+                legendMarkerType: "square",
+                dataPoints: co2Data,
+            }]
+        }
+
+
         const pmChart = new CanvasJS.Chart('pmChart', pmChartOptions)
+        const coChart = new CanvasJS.Chart('coChart', coChartOptions)
+        const tvocChart = new CanvasJS.Chart('tvocChart', tvocChartOptions)
+        const co2Chart = new CanvasJS.Chart('co2Chart', co2ChartOptions)
         pmChart.render()
-        // const coChart = new CanvaJs.Chart('coChart')
-        // const tvocChart = new CanvaJs.Chart('tvocChart')
-        // const co2Chart = new CanvaJs.Chart('coChart')
+        coChart.render()
+        tvocChart.render()
+        co2Chart.render()
     }
 
 </script>
